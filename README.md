@@ -1,9 +1,21 @@
 
-
 # 🏛 Women Empowerment RAG Microservice API
 
 This project is a **microservice-based Retrieval-Augmented Generation (RAG) API** built with **FastAPI**, **LangChain**, **Qdrant Cloud**, and **Hugging Face-hosted models**.
-It enables answering user queries about **Safety and Legal Rights for Women Empowerment** by retrieving relevant legal/policy documents and generating contextual answers.
+It answers queries related to **Safety and Legal Rights for Women Empowerment (India focus)** by retrieving relevant documents and generating context-grounded answers.
+
+---
+
+## 🌐 Live API
+
+The microservice is deployed and publicly available at:
+
+**Base URL:**
+👉 [https://legal-rag-api-oe37.onrender.com/](https://legal-rag-api-oe37.onrender.com/)
+
+
+
+This is the **API endpoint** you will call from clients (mobile apps, chatbots, or web apps).
 
 ---
 
@@ -11,24 +23,23 @@ It enables answering user queries about **Safety and Legal Rights for Women Empo
 
 * **Hosted Hugging Face models**
 
-  * LLM: `openai/gpt-oss-20b` (text generation)
-  * Embeddings: `sentence-transformers/all-MiniLM-L6-v2` (feature extraction)
+  * LLM: `openai/gpt-oss-20b`
+  * Embeddings: `sentence-transformers/all-MiniLM-L6-v2`
 
 * **Qdrant Cloud Vector Database**
 
-  * Stores embeddings of women’s legal rights documents.
-  * Enables semantic + keyword-based hybrid retrieval.
+  * Stores document embeddings for women’s rights and safety.
+  * Fast semantic + keyword retrieval.
 
 * **Ensemble Retrieval**
 
-  * **Dense retriever (Qdrant)** for semantic matches.
-  * **BM25 retriever** for keyword exact matches.
-  * **Weighted combination** for best results.
+  * Combines **semantic retrieval (Qdrant)** and **keyword retrieval (BM25)**.
+  * Weighted blend for best accuracy.
 
 * **REST API with FastAPI**
 
-  * `/health` – service health check.
-  * `/rag` – query endpoint, returns context-grounded answers.
+  * `/health` → check service status.
+  * `/rag` → submit a query, get a contextual answer.
 
 ---
 
@@ -36,102 +47,78 @@ It enables answering user queries about **Safety and Legal Rights for Women Empo
 
 ```
 app/
- ├─ main.py                  # FastAPI entrypoint
- ├─ config.py                # Environment configuration
+ ├─ main.py                  # FastAPI app & endpoints
+ ├─ config.py                # Environment variables & settings
  ├─ models/
- │   └─ llm_loader.py        # Loads HuggingFace-hosted LLM
+ │   └─ llm_loader.py        # Hugging Face hosted LLM loader
  ├─ rag/
  │   ├─ embeddings.py        # Hosted embeddings client
- │   ├─ loader.py            # Loads JSON docs into LangChain Documents
- │   ├─ qdrant_utils.py      # Ensures Qdrant collections exist
- │   ├─ ingest.py            # One-time ingestion to Qdrant
+ │   ├─ loader.py            # JSON → LangChain Documents
+ │   ├─ qdrant_utils.py      # Ensures Qdrant collections
+ │   ├─ ingest.py            # One-time document ingestion
  │   ├─ pipeline.py          # Builds retrievers & RAG chain
- │   ├─ prompts.py           # Prompt templates for QA
- │   └─ utils.py             # JSON/document flattening helpers
- └─ ...
+ │   ├─ prompts.py           # Prompt templates
+ │   └─ utils.py             # Helper functions
 ```
 
 ---
 
-## ⚙️ Setup & Installation
+## ⚙️ Setup (Local)
 
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/<your-org>/<repo-name>.git
-cd <repo-name>
-```
-
-### 2. Create virtual environment
+### 1. Clone & create venv
 
 ```bash
+git clone https://github.com/<your-org>/<repo>.git
+cd <repo>
 python -m venv .venv
 source .venv/bin/activate   # Windows: .venv\Scripts\activate
 ```
 
-### 3. Install dependencies
+### 2. Install requirements
 
 ```bash
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4. Configure environment
-
-Create `.env` file:
+### 3. Configure `.env`
 
 ```ini
-# Hugging Face
 HUGGINGFACEHUB_API_TOKEN=hf_xxx
 HF_LLM_REPO=openai/gpt-oss-20b
 HF_EMBEDDING_REPO=sentence-transformers/all-MiniLM-L6-v2
 
-# Qdrant Cloud
 QDRANT_URL=https://<cluster-id>.qdrant.io
 QDRANT_API_KEY=your_qdrant_key
 QDRANT_COLLECTION=women_rights_rag
 
-# API
 CORS_ORIGINS=*
 ```
 
----
-
-## 🏗️ Workflow
-
-### 1. Ingest documents (one-time or when adding data)
+### 4. Ingest documents
 
 ```bash
 python -m app.rag.ingest
 ```
 
-This:
-
-* Loads JSON legal/policy docs from `app/rag/data/`.
-* Embeds text via Hugging Face hosted embedding model.
-* Stores vectors into Qdrant Cloud under the configured collection.
-
-### 2. Run API locally
+### 5. Run API
 
 ```bash
 uvicorn app.main:app --host 127.0.0.1 --port 8080 --reload
 ```
 
-API docs auto-generated at:
-
-* Swagger UI: [http://127.0.0.1:8080/docs](http://127.0.0.1:8080/docs)
-* ReDoc: [http://127.0.0.1:8080/redoc](http://127.0.0.1:8080/redoc)
-
 ---
 
 ## 📡 API Usage
 
-### `GET /health`
+### 1. `GET /health`
 
-Check service status.
+Check if API is alive.
+
+**Request**
 
 ```bash
-curl http://127.0.0.1:8080/health
+curl https://legal-rag-api-oe37.onrender.com/health
 ```
 
 **Response**
@@ -142,10 +129,22 @@ curl http://127.0.0.1:8080/health
 
 ---
 
-### `POST /rag`
+### 2. `POST /rag`
 
-Submit a query.
-Request body:
+Submit a natural language query.
+**URL:**
+
+```
+https://legal-rag-api-oe37.onrender.com/rag
+```
+
+**Headers**
+
+```http
+Content-Type: application/json
+```
+
+**Request Body**
 
 ```json
 {
@@ -153,35 +152,32 @@ Request body:
 }
 ```
 
-Response:
+**Response**
 
 ```json
 {
-  "response": "Yes. The POSH Act mandates that organizations with 10 or more employees must form an Internal Complaints Committee (ICC) to handle sexual harassment complaints."
-}
-```
-
-Another example:
-
-```json
-{
-  "query": "Can a woman stay in her shared household under the Domestic Violence Act?"
-}
-```
-
-Response:
-
-```json
-{
-  "response": "Yes. Under the Protection of Women from Domestic Violence Act (PWDVA), a woman has the right to reside in the shared household, regardless of ownership or title."
+  "response": "Yes. The POSH Act mandates organizations with 10 or more employees to form an Internal Complaints Committee (ICC) to handle sexual harassment complaints."
 }
 ```
 
 ---
 
-## 🛡 Safety & Ethics
+## 🧪 More Sample Queries
 
-* **Grounded responses**: The RAG pipeline only answers from ingested context.
-* **Fallback**: If context is missing, it replies with:
+```json
+{"query": "Can a woman stay in the shared household under the Domestic Violence Act?"}
+{"query": "What is the time limit for filing a sexual harassment complaint under the POSH Act?"}
+{"query": "What legal protections exist for women at work and home?"}
+```
+
+---
+
+## 🛡 Safety Mechanisms
+
+* **Grounded responses** → answers only from ingested documents.
+* **Fallback** → if no relevant info, responds with:
   *“I don’t have enough information in the provided documents.”*
-* **Disclaimers**: This system is **informational only** and **not a substitute for legal advice**.
+* **Disclaimer** → responses are informational only, not legal advice.
+
+
+
