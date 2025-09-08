@@ -1,0 +1,20 @@
+fastapi
+uvicorn
+
+# LangChain core + integrations
+langchain
+langchain-core
+langchain-community
+langchain-huggingface
+huggingface_hub
+
+# Managed vector DB
+qdrant-client
+
+# Keyword retriever for ensemble
+rank-bm25
+
+# Config / env
+pydantic
+pydantic-settings
+python-dotenv

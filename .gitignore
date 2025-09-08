@@ -1,0 +1,45 @@
+# --- Environment files ---
+.env
+.env.*
+!.env.example
+!.env.sample.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+*.log
+
+# --- Virtual environment ---
+.venv/
+venv/
+ENV/
+env/
+
+# --- Build / packaging ---
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+
+# --- IDEs / Editors ---
+.vscode/
+.idea/
+*.swp
+*~
+.project
+.pydevproject
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Test / coverage ---
+.coverage
+.pytest_cache/
+.tox/
+.mypy_cache/
+.cache/
