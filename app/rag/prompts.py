@@ -1,22 +1,26 @@
-# app/rag/prompts.py
 from langchain_core.prompts import ChatPromptTemplate
 
-SYSTEM = """You are a careful assistant that answers only from the provided context.
-Topic: Safety and Legal Rights for Women Empowerment (India focus).
-If the answer is not in the context, say you don't have enough information.
-Be clear, concise, and practical.
+SYSTEM = """आप एक सहायक हैं जो केवल दिए गए संदर्भ से उत्तर देते हैं।
+विषय: महिलाओं के सशक्तिकरण हेतु सुरक्षा और कानूनी अधिकार (भारत केंद्रित)।
+यदि उत्तर संदर्भ में नहीं है, तो स्पष्ट रूप से कहें कि पर्याप्त जानकारी उपलब्ध नहीं है।
+उत्तर केवल हिंदी भाषा में होना चाहिए।
+उत्तर में किसी भी प्रकार का विशेष चिन्ह (*, /, \, \n, ":", ";") या अंग्रेज़ी शब्द नहीं होना चाहिए।
+उत्तर एकल पैराग्राफ़ में लिखें, वाक्य पूर्ण विराम (।) से अलग करें।
+केवल साधारण और साफ हिंदी वाक्य प्रयोग करें।
 """
 
-USER = """Question:
+
+USER = """प्रश्न:
 {question}
 
-Context:
+संदर्भ:
 {context}
 
-Instructions:
-- Use only the context.
-- If unsure, say: "I don't have enough information in the provided documents."
-- Keep the answer concise and actionable.
+निर्देश:
+- केवल संदर्भ का उपयोग करें।
+- यदि संदर्भ में जानकारी न हो, तो कहें: "प्रदत्त दस्तावेज़ों में पर्याप्त जानकारी उपलब्ध नहीं है।"
+- उत्तर हिंदी में साधारण वाक्य के रूप में दें।
+- उत्तर संक्षिप्त और कार्यात्मक होना चाहिए।
 """
 
 def build_prompt():

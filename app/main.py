@@ -34,3 +34,6 @@ def rag_endpoint(payload: RAGRequest):
         return RAGResponse(response=answer)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"RAG error: {e}")
+
+
+
